@@ -1,3 +1,26 @@
+
+// FOR TEXT INPUT
+
+/*function playerChoice() {
+    let choice = prompt("What is your choice:");
+    let choices = ["rock", "paper", "scissors"];
+    while(!(choices.includes(choice.toLowerCase()))){
+        choice = prompt("Wrong input. Please type rock, paper or scissors");
+    }
+    return choice.toLowerCase();
+}
+*/
+const buttons = Array.from(document.querySelectorAll(".btn"));
+buttons.forEach(button => button.addEventListener('click', game));
+
+let playerScore = document.querySelector('#player-score');
+let playerCurrentScore = parseInt(playerScore.innerText);
+
+let computerScore = document.querySelector('#computer-score');
+let computerCurrentScore = parseInt(computerScore.innerText);
+
+let message = document.querySelector("#info-output");
+
 function computerPlay() {
     let choices = ["Rock", "Paper", "Scissors"];
     let index = Math.floor(Math.random() * choices.length);
@@ -6,47 +29,60 @@ function computerPlay() {
     return result;
 }
 
-function playerChoice() {
-    let choice = prompt("What is your choice:");
-    let choices = ["rock", "paper", "scissors"];
-    while(!(choices.includes(choice.toLowerCase()))){
-        choice = prompt("Wrong input. Please type rock, paper or scissors");
+
+function win(score, phrase){
+    if(score  === 5){
+        buttons.forEach(button => button.removeEventListener('click',game))
+        message.innerText = phrase;
     }
-    return choice.toLowerCase();
 }
 
+function playerGetScore(){
+    message.innerText = "Congratulation! You win!";
+    playerCurrentScore++;
+    playerScore.innerText = playerCurrentScore;
+    win(playerCurrentScore, "You win! The final result is:");
+}
+
+function computerGetScore(){
+    message.innerText = "Sorry, you lost.";
+    computerCurrentScore++;
+    computerScore.innerText = computerCurrentScore;
+    win(computerCurrentScore, "You lost. The final result is:");
+}
 
 function playRound(playerSelection, computerSelection){
     if(playerSelection.toLowerCase() === "rock"){
         if(computerSelection === "scissors"){
-            console.log("Congratulation! You win!");
+            playerGetScore();
         } else if(computerSelection === "paper"){
-            console.log("Sorry, you lost.")
-        } else{console.log("It's a tie")}
+            computerGetScore();
+        } else{message.innerText = "It's a tie";}
     } else if(playerSelection.toLowerCase() === "scissors"){
         if(computerSelection === "paper"){
-            console.log("Congratulation! You win!");
+            playerGetScore();
         } else if(computerSelection === "rock"){
-            console.log("Sorry, you lost.")
-        } else{console.log("It's a tie")}
+            computerGetScore();
+        } else{message.innerText ="It's a tie";}
     } else {
         if(computerSelection === "rock"){
-            console.log("Congratulation! You win!");
+            playerGetScore();
         } else if(computerSelection === "scissors"){
-            console.log("Sorry, you lost.")
-        } else{console.log("It's a tie")}
+            computerGetScore();
+        } else{message.innerText ="It's a tie";}
     }
 
 }
 
-function game(){
-    
-    for (let i=0; i < 5; i++){
-        const playerSelection = playerChoice();
-        const computerSelection = computerPlay();
-        playRound(playerSelection, computerSelection);
-    }
+
+
+
+function game(e){
+
+    const playerSelection = e.target.innerText.toLowerCase();
+    const computerSelection = computerPlay();
+    playRound(playerSelection, computerSelection);
 }
 
-game();
+
 
